@@ -44,6 +44,8 @@ def GetCredit(username, password):
             __url = 'https://www.hostloc.com/space-uid-{}.html'.format(__x)
             GetPage(__url, My_Cookies)
 
+def start():
+    GetCredit(hostloc_username, hostloc_password)
 
 if __name__ == '__main__':
     GetCredit(hostloc_username, hostloc_password)
