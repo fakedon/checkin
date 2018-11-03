@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-from pt.ipt import ipt_checkin
+from hostloc2 import start
 
 if __name__ == "__main__":
-    ipt_checkin()
+    start()
