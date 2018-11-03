@@ -20,7 +20,7 @@ def ipt_checkin():
     session = requests.Session()
     session.headers.update(headers)
     
-    data = dict(username=ipt_username, password=ipt_password}
+    data = dict(username=ipt_username, password=ipt_password)
     resp = session.post('https://iptorrents.com/take_login.php', data=data)
 
     print(resp.text)
