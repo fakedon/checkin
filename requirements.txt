@@ -1,2 +1,2 @@
 requests
-pyquery
+#pyquery
