@@ -58,10 +58,12 @@ def GetCredit(username, password):
             __url = 'https://www.hostloc.com/space-uid-{}.html'.format(__x)
             GetPage(__url, My_Cookies)
 
-
-if __name__ == '__main__':
+def start():
     for account in account_dict.values():
         GetCredit(acount['username'], account['password'])
         time.sleep(5)
+
+if __name__ == '__main__':
+    start()
 #     for __i in range(0, len(account_dict)):
 #         GetCredit(account_dict[str(__i)]['username'], account_dict[str(__i)]['password'])
