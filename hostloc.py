@@ -8,7 +8,7 @@ from http import cookiejar
 
 account_dict = {}
 envs = dict(os.environ)
-for key, value in envs:
+for key, value in envs.items():
     if key.startswith('hostloc_username'):
         id = key.split('hostloc_username_')[-1]
         password = os.getenv('hostloc_password_' + id)
