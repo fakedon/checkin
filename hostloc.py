@@ -60,7 +60,7 @@ def GetCredit(username, password):
 
 def start():
     for account in account_dict.values():
-        GetCredit(acount['username'], account['password'])
+        GetCredit(account['username'], account['password'])
         time.sleep(5)
 
 if __name__ == '__main__':
