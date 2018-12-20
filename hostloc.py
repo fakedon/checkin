@@ -1,14 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
+import os
+import time
 from urllib import request
 from http import cookiejar
 
-account_dict = {
-    '0': {'username': 'xxxx', 'password': 'xxx'},
-    '1': {'username': 'yyyy', 'password': 'xxx'},
-    '2': {'username': 'zzzz', 'password': 'xxx'},
-}
+account_dict = {}
+envs = dict(os.environ)
+for key, value in envs:
+    if key.startswith('hostloc_username'):
+        id = key.split('hostloc_username_')[-1]
+        password = os.getenv('hostloc_password_' + id)
+        if password:
+            account_dict[id] = {'username': value, 'password': password}
+
+# account_dict = {
+#     '0': {'username': 'xxxx', 'password': 'xxx'},
+#     '1': {'username': 'yyyy', 'password': 'xxx'},
+#     '2': {'username': 'zzzz', 'password': 'xxx'},
+# }
 
 
 def Login(URL, UserData):
@@ -49,5 +60,8 @@ def GetCredit(username, password):
 
 
 if __name__ == '__main__':
-    for __i in range(0, len(account_dict)):
-        GetCredit(account_dict[str(__i)]['username'], account_dict[str(__i)]['password'])
+    for account in account_dict.values():
+        GetCredit(acount['username'], account['password'])
+        time.sleep(5)
+#     for __i in range(0, len(account_dict)):
+#         GetCredit(account_dict[str(__i)]['username'], account_dict[str(__i)]['password'])
