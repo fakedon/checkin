@@ -6,14 +6,22 @@ import time
 from urllib import request
 from http import cookiejar
 
-account_dict = {}
+
+accounts = {}
+#account_dict = {}
 envs = dict(os.environ)
 for key, value in envs.items():
     if key.startswith('hostloc_username_'):
-        id = key.split('hostloc_username_')[-1]
+        env_id = key.split('hostloc_username_')[-1]
         password = os.getenv('hostloc_password_' + id)
         if password:
-            account_dict[id] = {'username': value, 'password': password}
+            _account = {
+                'env_id': env_id,
+                'username': value,
+                'password': password,
+            }
+            accouts[value] = _account
+            # account_dict[env_id] = {'username': value, 'password': password}
 
 # account_dict = {
 #     '0': {'username': 'xxxx', 'password': 'xxx'},
@@ -60,7 +68,7 @@ def GetCredit(username, password):
             time.sleep(10)
 
 def start():
-    for account in account_dict.values():
+    for account in accounts.values():
         GetCredit(account['username'], account['password'])
         time.sleep(5 * 30)
 
