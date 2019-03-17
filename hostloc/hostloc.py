@@ -120,7 +120,7 @@ def hostloc_checkin(account):
     else:
         logger.info("登陆出错")
         return
-    logger.info("用户%s,你的金钱为%s", username, current_money)
+    logger.info("用户: %s,你的金钱: %s", username, current_money)
     time.sleep(randint(1, 5))
 
     # for i in range(20359, 20370):
@@ -147,7 +147,7 @@ def hostloc_checkin(account):
     new_money = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
     new_money = re.search(r'金钱: </em>(\d+).+?</li>', new_money).group(1)
 
-    logger.info("用户%s,你的金钱为%s, %s", username, current_money, new_money)
+    logger.info("用户: %s,你的金钱: %s(之前), %s(现在)", username, current_money, new_money)
 
 
 def start():
