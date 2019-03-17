@@ -6,6 +6,11 @@ import time
 from urllib import request
 from http import cookiejar
 
+def get_ip(url=None):
+    if url is None:
+        url = 'https://api.ipify.org'
+    __req = request.Request(url)
+    return request.urlopen(__req).read().decode('utf-8')
 
 accounts = {}
 #account_dict = {}
@@ -20,7 +25,7 @@ for key, value in envs.items():
                 'username': value,
                 'password': password,
             }
-            accouts[value] = _account
+            accounts[value] = _account
             # account_dict[env_id] = {'username': value, 'password': password}
 
 # account_dict = {
@@ -73,6 +78,7 @@ def start():
         time.sleep(5 * 30)
 
 if __name__ == '__main__':
+    print(get_ip())
     start()
 #     for __i in range(0, len(account_dict)):
 #         GetCredit(account_dict[str(__i)]['username'], account_dict[str(__i)]['password'])
