@@ -6,6 +6,7 @@ import time
 from urllib import request
 from http import cookiejar
 
+
 def get_ip(url=None):
     if url is None:
         url = 'https://api.ipify.org'
@@ -13,7 +14,7 @@ def get_ip(url=None):
     return request.urlopen(__req).read().decode('utf-8')
 
 accounts = {}
-#account_dict = {}
+# account_dict = {}
 envs = dict(os.environ)
 for key, value in envs.items():
     if key.startswith('hostloc_username_'):
@@ -71,6 +72,7 @@ def GetCredit(username, password):
             __url = 'https://www.hostloc.com/space-uid-{}.html'.format(__x)
             GetPage(__url, My_Cookies)
             time.sleep(10)
+
 
 def start():
     for account in accounts.values():
