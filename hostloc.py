@@ -13,7 +13,7 @@ envs = dict(os.environ)
 for key, value in envs.items():
     if key.startswith('hostloc_username_'):
         env_id = key.split('hostloc_username_')[-1]
-        password = os.getenv('hostloc_password_' + id)
+        password = os.getenv('hostloc_password_' + env_id)
         if password:
             _account = {
                 'env_id': env_id,
