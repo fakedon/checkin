@@ -90,4 +90,14 @@ Travis运行效果图：
 
 ![](/docs/img/hostloc_autocheck_travis.jpg)
 
-当然你可以部署到免费的无服务器云函数上，如腾讯云，本脚本中已包含main_handler函数。
+
+**三. 部署到腾讯云五服务器云函数**
+* 访问[https://console.cloud.tencent.com/scf/list](https://console.cloud.tencent.com/scf/list)
+* 新建函数服务
+   ![](/docs/img/hostloc_tencent1.jpg)
+* 下一步，修改执行方法为run.run.main_handler，本地上传文件夹，完成
+   ![](/docs/img/hostloc_tencent2.jpg)
+* 编辑函数配置，这里可以修改超时时间，添加环境变量
+   ![](/docs/img/hostloc_tencent3.jpg)
+* 添加触发方式，定时触发，每天，否，立即启用，保存
+   ![](/docs/img/hostloc_tencent4.jpg)

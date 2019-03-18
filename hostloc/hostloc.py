@@ -28,11 +28,6 @@ ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-fh = logging.FileHandler('hostloc.log', mode='a')
-fh.setLevel(logging.INFO)
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-
 
 def get_ip(url=None, proxies=None):
     if url is None:
@@ -152,7 +147,12 @@ def hostloc_checkin(account):
     logger.info("用户: %s,你的金钱: %s(之前), %s(现在)", username, current_money, new_money)
 
 
-def start():
+def start(log_to_file=True):
+    if log_to_file:
+        fh = logging.FileHandler('hostloc.log', mode='a')
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
     logger.debug('本机IP: %s', get_ip())
     for account in accounts.values():
         try:
