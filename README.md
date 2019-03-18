@@ -1,5 +1,7 @@
 # checkin
 
+## Hostloc刷分脚本
+
 前贴：[https://www.hostloc.com/thread-505027-1-1.html](https://www.hostloc.com/thread-505027-1-1.html)
 
 源码地址：[https://github.com/fakedon/checkin](https://github.com/fakedon/checkin)
@@ -75,7 +77,7 @@ accounts 字典中添加账号即可，规则如1
 * Cron Jobs 设置成 daily
 
 PS. 用户名/密码是填在travis-ci的环境变量里，并不会暴露密码，github中并没有密码信息  
-因为签到任务依托于travis-ci，任务调用并不是定时执行，可以在一天中的任何时候，这个取决于网站的任务调配，有时两次执行间隔差不多有48个小时
+因为签到任务依托于travis-ci，任务调用并不是定时执行，可以在一天中的任何时候，这个取决于网站的任务调配，有时两次执行间隔差不多有48个小时, 但是都在48小时之内。
 
 Travis运行效果图：
 
