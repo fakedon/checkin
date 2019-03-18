@@ -1,7 +1,6 @@
 # checkin
 
 ## Hostloc刷分脚本
----
 
 前贴：[https://www.hostloc.com/thread-505027-1-1.html](https://www.hostloc.com/thread-505027-1-1.html)
 
@@ -11,13 +10,11 @@
 更新下脚本，每个操作都添加1-5秒的时间间隔，每个账号间等待3分钟，travis效果看下图
 
 ## 快捷链接
----
-- [本地或者服务器运行](#run-local)
-- [部署到travis](#deploy-to-travis)
-- [部署到腾讯云五服务器云函数](#deploy-to-tencent)
+- [本地或者服务器运行](#本地或者服务器运行)
+- [部署到travis](#部署到travis)
+- [部署到腾讯云无服务器云函数](#部署到腾讯云五服务器云函数)
 
 ## 特点
----
 * 多账号
 * 支持代理（http, https, socks5)
 * 避免被判定cc
@@ -25,7 +22,6 @@
 * 日志保存
 
 ## 本地或者服务器运行
--------
 * 安装python3
 * 运行python -V查看python版本，如果不是3版本，尝试运行python3 -V
 * git clone https://github.com/fakedon/checkin
@@ -83,7 +79,6 @@ accounts 字典中添加账号即可，规则如1
 * 之后运行python3 run.py -c hostloc/hostloc.cfg
 
 ## 部署到travis
--------
 * fork我的项目，下一步
    或者上传你自己的签到脚本到github，需要有.travis.yml文件，并在文件内设置运行签到的命令
 * 注册[https://travis-ci.org/](https://travis-ci.org/)，可通过github一键注册
@@ -99,8 +94,7 @@ Travis运行效果图：
 ![](/docs/img/hostloc_autocheck_travis.jpg)
 
 
-## 部署到腾讯云五服务器云函数
----
+## 部署到腾讯云无服务器云函数
 * 访问[https://console.cloud.tencent.com/scf/list](https://console.cloud.tencent.com/scf/list)
 * 新建函数服务
    ![](/docs/img/hostloc_tencent1.jpg)
