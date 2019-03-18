@@ -24,11 +24,11 @@
 ## 本地或者服务器运行
 * 安装python3
 * 运行python -V查看python版本，如果不是3版本，尝试运行python3 -V
-* git clone https://github.com/fakedon/checkin
+* `git clone https://github.com/fakedon/checkin`
 * 上面是python就运行pip，是python3就运行pip3
-* pip3 install -r requirements.txt
+* `pip3 install -r requirements.txt`
 * 上面是python就运行python，是python3就运行python3
-* python3 run.py
+* `python3 run.py`
 
 **添加账号方式有三种：**
 * 运行python run.py时指定-c参数  
@@ -76,7 +76,7 @@
 accounts 字典中添加账号即可，规则如1
 
    以上3种方式可同时存在  
-* 之后运行python3 run.py -c hostloc/hostloc.cfg
+* 之后运行`python3 run.py -c hostloc/hostloc.cfg`
 
 ## 部署到travis
 * fork我的项目，下一步
@@ -95,6 +95,8 @@ Travis运行效果图：
 
 
 ## 部署到腾讯云无服务器云函数
+* 下载本源码到本地  
+   `git clone https://github.com/fakedon/checkin`
 * 访问[https://console.cloud.tencent.com/scf/list](https://console.cloud.tencent.com/scf/list)
 * 新建函数服务
    ![](/docs/img/hostloc_tencent1.jpg)
