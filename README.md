@@ -44,7 +44,7 @@
 
    username=username1 修改username1为当前用户名
 
-   password=password1 修改password1为当前用户名
+   password=password1 修改password1为当前密码
 
    http_proxy=http1 这里设置http代理，没有删除此行，代理格式：http://127.0.0.1:1080，socks5://127.0.0.1:1080
 
@@ -95,7 +95,7 @@ Travis运行效果图：
 
 
 ## 部署到腾讯云无服务器云函数
-* 下载本源码到本地  
+* 下载本项目到本地  
    `git clone https://github.com/fakedon/checkin`
 * 访问[https://console.cloud.tencent.com/scf/list](https://console.cloud.tencent.com/scf/list)
 * 新建函数服务
