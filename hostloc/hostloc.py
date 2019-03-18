@@ -11,6 +11,8 @@ from random import randint
 
 import requests
 
+HOSTLOC_DIR = os.path.dirname(os.path.abspath(__file__))
+log_path = os.path.join(HOSTLOC_DIR, 'hostloc.log')
 
 parser = argparse.ArgumentParser(description='Hostloc auto checkin')
 parser.add_argument('-c', '--config', )
