@@ -151,6 +151,7 @@ def hostloc_checkin(account):
 
 
 def start():
+    logger.debug('本机IP: %s', get_ip())
     for account in accounts.values():
         try:
             hostloc_checkin(account)
@@ -167,5 +168,4 @@ def main_handler(event, context):
 
 
 if __name__ == '__main__':
-    logger.debug('本机IP: %s', get_ip())
     start()
