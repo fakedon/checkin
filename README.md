@@ -106,6 +106,6 @@ Travis运行效果图：
    示例图为我添加的小号（Alita）
    ![](/docs/img/hostloc_tencent14.jpg)
 * 添加触发方式，触发方式：定时触发，触发周期：每天，填入参数：否，立即启用，保存
-   ![](/docs/img/hostloc_tencent14.jpg)
+   ![](/docs/img/hostloc_tencent4.jpg)
 * 函数代码测试如下图
    ![](/docs/img/hostloc_tencent15.jpg)
