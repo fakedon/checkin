@@ -95,14 +95,17 @@ Travis运行效果图：
 
 
 ## 部署到腾讯云无服务器云函数
-* 下载本项目到本地  
-   `git clone https://github.com/fakedon/checkin`
 * 访问[https://console.cloud.tencent.com/scf/list](https://console.cloud.tencent.com/scf/list)
-* 新建函数服务
+* 新建函数服务，创建方式：空白函数，函数名称：任意，如hostloc，运行环境：Python3.6，下一步
    ![](/docs/img/hostloc_tencent1.jpg)
-* 下一步，修改执行方法为run.run.main_handler，本地上传文件夹，完成
-   ![](/docs/img/hostloc_tencent2.jpg)
-* 编辑函数配置，这里可以修改超时时间，添加环境变量
-   ![](/docs/img/hostloc_tencent3.jpg)
-* 添加触发方式，定时触发，每天，否，立即启用，保存
-   ![](/docs/img/hostloc_tencent4.jpg)
+* 执行方法：index.main_handler(不用改)，提交方式：在线编辑，复制[https://github.com/fakedon/checkin/blob/master/hostloc/hostloc.py](https://github.com/fakedon/checkin/blob/master/hostloc/hostloc.py)内代码到编辑框里，完成
+   ![](/docs/img/hostloc_tencent12.jpg)
+* 由于腾讯云有一定的免费时间额度，这里我默认把每个账号完成后等待时间改为60秒，如果你要改的话，修改下图172行interval=60的数字60为你想要的等待时间，单位秒
+   ![](/docs/img/hostloc_tencent13.jpg)
+* 编辑函数配置，超时时间：300，添加环境变量，key填hostloc_username_1和hostloc_password_1，value填帐号和密码，有代理添加代理，Name填代理方式hostloc_http_1或hostloc_https_1，Value填上述提到的代理，多账号以此类推  
+   示例图为我添加的小号（Alita）
+   ![](/docs/img/hostloc_tencent14.jpg)
+* 添加触发方式，触发方式：定时触发，触发周期：每天，填入参数：否，立即启用，保存
+   ![](/docs/img/hostloc_tencent14.jpg)
+* 函数代码测试如下图
+   ![](/docs/img/hostloc_tencent15.jpg)
