@@ -147,21 +147,24 @@ def hostloc_checkin(account):
     logger.info("用户: %s,你的金钱: %s(之前), %s(现在)", username, current_money, new_money)
 
 
-def start(log_to_file=True):
+def start(interval=None, log_to_file=True):
     if log_to_file:
         fh = logging.FileHandler('hostloc.log', mode='a')
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
     logger.debug('本机IP: %s', get_ip())
+    _first = True
+    _wait_time = interval or 3 * 60
     for account in accounts.values():
+        if not _first:
+            logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
+            time.sleep(int(_wait_time))
+        _first = False
         try:
             hostloc_checkin(account)
         except Exception as e:
             logger.exception(e)
-        _wait_time = 3 * 60
-        logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
-        time.sleep(_wait_time)
     logger.info('========= 今日任务完成 ==========')
 
 
