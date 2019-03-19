@@ -108,7 +108,7 @@ def hostloc_checkin(account):
     s.headers.update(headers)
     logger.info('使用IP: {}'.format(get_ip(proxies=proxies)))
     login_url = 'https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
-    s.post(login_url, {"username": username, 'password': password}, proxies=proxies)
+    s.post(login_url, {'username': username, 'password': password}, proxies=proxies)
     time.sleep(randint(1, 5))
     user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
     _m = re.search(r'金钱: </em>(\d+).+?</li>', user_info)

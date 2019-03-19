@@ -103,6 +103,7 @@ Travis运行效果图：
 * 由于腾讯云有一定的免费时间额度，这里我默认把每个账号完成后等待时间改为60秒，如果你要改的话，修改下图172行interval=60的数字60为你想要的等待时间，单位秒
    ![](/docs/img/hostloc_tencent13.jpg)
 * 编辑函数配置，超时时间：300，添加环境变量，key填hostloc_username_1和hostloc_password_1，value填帐号和密码，有代理添加代理，Name填代理方式hostloc_http_1或hostloc_https_1，Value填上述提到的代理，多账号以此类推  
+**注意**：用户名为**中文**时，如下图所示添加一个环境变量(key: LC_ALL, value: en_US.utf-8)，否则会报错  
    示例图为我添加的小号（Alita）  
    ![](/docs/img/hostloc_tencent14.jpg)
 * 添加触发方式，触发方式：定时触发，触发周期：每天，填入参数：否，立即启用，保存
