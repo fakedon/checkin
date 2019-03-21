@@ -11,6 +11,7 @@ from random import randint
 
 import requests
 
+
 HOSTLOC_DIR = os.path.dirname(os.path.abspath(__file__))
 log_path = os.path.join(HOSTLOC_DIR, 'hostloc.log')
 
@@ -111,19 +112,15 @@ def hostloc_checkin(account):
     s.post(login_url, {'username': username, 'password': password}, proxies=proxies)
     time.sleep(randint(1, 5))
     user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
-    _m = re.search(r'金钱: </em>(\d+).+?</li>', user_info)
-    if _m:
-        current_money = _m.group(1)
+    info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
+    _current = re.search(info_pattern, user_info)
+    if _current:
+        logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
     else:
         logger.info("登陆出错")
         return
-    logger.info("用户: %s,你的金钱: %s", username, current_money)
     time.sleep(randint(1, 5))
 
-    # for i in range(20359, 20370):
-    #     s.get('https://www.hostloc.com/space-uid-%s.html' % i, proxies=proxies)
-    #     logger.debug('访问UID: %s', i)
-    #     time.sleep(randint(3, 10))
     _visit = 0
     visited_space_uids = []
     random_visits = 10 + randint(0, 5)
@@ -141,10 +138,10 @@ def hostloc_checkin(account):
             continue
         logger.debug('访问UID: %s, 成功', space_uid)
         _visit += 1
-    new_money = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
-    new_money = re.search(r'金钱: </em>(\d+).+?</li>', new_money).group(1)
-
-    logger.info("用户: %s,你的金钱: %s(之前), %s(现在)", username, current_money, new_money)
+    new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
+    _new = re.search(info_pattern, new_user_info)
+    logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+    logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
 
 
 def start(interval=None, log_to_file=True):
