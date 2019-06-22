@@ -16,3 +16,9 @@ cover/
 .tox
 *.bak
 *.log
+
+.vscode/
+utils
+plugins
+hostloc/local.cfg
+hostloc/requirements.txt

@@ -109,7 +109,16 @@ def hostloc_checkin(account):
     s.headers.update(headers)
     logger.info('使用IP: {}'.format(get_ip(proxies=proxies)))
     login_url = 'https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
-    s.post(login_url, {'username': username, 'password': password}, proxies=proxies)
+    login_post = s.post(login_url, {'username': username, 'password': password}, proxies=proxies)
+
+    _aes = re.search(r'toNumbers\((\"\w{32}\")\).*toNumbers\((\"\w{32}\")\).*toNumbers\((\"\w{32}\")\)', login_post.text, flags=re.S)
+    if _aes:
+        logger.info("发现防ddos")
+        aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes.group(1), b=_aes.group(2), c=_aes.group(3))
+        L7FW = requests.get(aes_url, proxies=proxies).text
+        login_post.cookies['L7FW'] = L7FW
+        login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=login_post.cookies)
+
     time.sleep(randint(1, 5))
     user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
     info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
