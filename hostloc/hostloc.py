@@ -158,7 +158,7 @@ def hostloc_checkin_retry(account, retry=3):
     while True:
         try:
             hostloc_checkin(account)
-        except:
+        except Exception as e:
             logger.exception(e)
             if retry == 0:
                 logger.debug('签到失败')
