@@ -40,7 +40,7 @@ accounts = {}
 config_file = args.config
 if config_file and os.path.isfile(config_file):
     config = configparser.ConfigParser()
-    config.read(config_file)
+    config.read(config_file, encoding="utf-8-sig")
     for sec in config.sections():
         username = config.get(sec, 'username', fallback=None)
         password = config.get(sec, 'password', fallback=None)
@@ -103,24 +103,25 @@ def hostloc_checkin(account):
     password = account.get('password')
     proxies = account.get('proxies')
     s = requests.session()
+    cookies = {}
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     }
     s.headers.update(headers)
     logger.info('使用IP: {}'.format(get_ip(proxies=proxies)))
     login_url = 'https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
-    login_post = s.post(login_url, {'username': username, 'password': password}, proxies=proxies)
+    login_post = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     _aes = re.findall("toNumbers\(\"(.*?)\"\)?", login_post.text, flags=re.S)
     if _aes:
         logger.info("发现防ddos")
         aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes[0], b=_aes[1], c=_aes[2])
         L7FW = requests.get(aes_url, proxies=proxies).text
-        login_post.cookies['L7FW'] = L7FW
-        login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=login_post.cookies)
+        cookies['L7FW'] = L7FW
+        login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     time.sleep(randint(1, 5))
-    user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
+    user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
     _current = re.search(info_pattern, user_info)
     if _current:
@@ -139,7 +140,7 @@ def hostloc_checkin(account):
         space_uid = randint(1, 35550)
         if space_uid in visited_space_uids:
             continue
-        space_text = s.get('https://www.hostloc.com/space-uid-%s.html' % space_uid, proxies=proxies).text
+        space_text = s.get('https://www.hostloc.com/space-uid-%s.html' % space_uid, proxies=proxies, cookies=cookies).text
         visited_space_uids.append(space_uid)
         time.sleep(randint(1, 5))
         if '抱歉，您指定的用户空间不存在' in space_text:
@@ -147,7 +148,7 @@ def hostloc_checkin(account):
             continue
         logger.debug('访问UID: %s, 成功', space_uid)
         _visit += 1
-    new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies).text
+    new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     _new = re.search(info_pattern, new_user_info)
     logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
     logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
@@ -158,8 +159,8 @@ def hostloc_checkin_retry(account, retry=3):
         try:
             hostloc_checkin(account)
         except:
+            logger.exception(e)
             if retry == 0:
-                logger.exception(e)
                 break
             retry -= 1
             time.sleep(20)
