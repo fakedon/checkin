@@ -114,7 +114,7 @@ def hostloc_checkin(account):
     _aes = re.findall("toNumbers\(\"(.*?)\"\)?", login_post.text, flags=re.S)
     if _aes:
         logger.info("发现防ddos")
-        aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes[1], b=_aes[2], c=_aes[3])
+        aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes[0], b=_aes[1], c=_aes[2])
         L7FW = requests.get(aes_url, proxies=proxies).text
         login_post.cookies['L7FW'] = L7FW
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=login_post.cookies)
