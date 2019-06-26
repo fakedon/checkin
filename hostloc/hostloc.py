@@ -153,6 +153,18 @@ def hostloc_checkin(account):
     logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
 
 
+def hostloc_checkin_retry(account, retry=3):
+    while True:
+        try:
+            hostloc_checkin(account)
+        except:
+            if retry == 0:
+                logger.exception(e)
+                break
+            retry -= 1
+            time.sleep(20)
+
+
 def start(interval=None, log_to_file=True):
     if log_to_file:
         fh = logging.FileHandler('hostloc.log', mode='a')
@@ -167,10 +179,7 @@ def start(interval=None, log_to_file=True):
             logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
             time.sleep(int(_wait_time))
         _first = False
-        try:
-            hostloc_checkin(account)
-        except Exception as e:
-            logger.exception(e)
+        hostloc_checkin_retry(account, retry=3)
     logger.info('========= 今日任务完成 ==========')
 
 
