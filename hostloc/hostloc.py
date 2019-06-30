@@ -138,7 +138,7 @@ def hostloc_checkin(account, strage='local'):
         )
         logger.debug('L7FW: %s', L7FW)
         cookies['L7FW'] = L7FW
-        time.sleep(0.2)
+        time.sleep(1)
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     time.sleep(randint(1, 5))
