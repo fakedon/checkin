@@ -118,6 +118,7 @@ def hostloc_checkin(account):
         aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes[0], b=_aes[1], c=_aes[2])
         L7FW = requests.get(aes_url, proxies=proxies).text
         cookies['L7FW'] = L7FW
+        logger.info('cookies:', cookies)
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     time.sleep(randint(1, 5))
