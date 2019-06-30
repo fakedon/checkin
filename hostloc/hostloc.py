@@ -102,12 +102,18 @@ for key, value in envs.items():
             accounts[value] = _account
 
 
+L7FW = None
+
+
 def hostloc_checkin(account, strage='local'):
     username = account.get('username')
     password = account.get('password')
     proxies = account.get('proxies')
     s = requests.session()
     cookies = {}
+    global L7FW
+    if L7FW:
+        cookies['L7FW'] = L7FW
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     }
@@ -132,7 +138,7 @@ def hostloc_checkin(account, strage='local'):
         )
         logger.debug('L7FW: %s', L7FW)
         cookies['L7FW'] = L7FW
-        time.sleep(0.1)
+        time.sleep(0.2)
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     time.sleep(randint(1, 5))
@@ -172,7 +178,7 @@ def hostloc_checkin(account, strage='local'):
 def hostloc_checkin_retry(account, retry=3, strage='local'):
     while True:
         try:
-            hostloc_checkin(account)
+            hostloc_checkin(account, strage='local')
             break
         except Exception as e:
             logger.exception(e)
