@@ -12,6 +12,7 @@
 ## 快捷链接
 - [本地或者服务器运行](#本地或者服务器运行)
 - [部署到travis](#部署到travis)
+- [部署到Github Actions](#部署到Github Actions)
 - [部署到腾讯云无服务器云函数](#部署到腾讯云无服务器云函数)
 
 ## 特点
@@ -92,6 +93,21 @@ PS. 用户名/密码是填在travis-ci的环境变量里，并不会暴露密码
 Travis运行效果图：
 
 ![](/docs/img/hostloc_autocheck_travis.jpg)
+
+
+## 部署到Github Actions
+[Github actions](https://github.com/features/actions)是github的新功能，需要排队申请，通过后即可使用，访问[此处](https://github.com/features/actions),申请开通
+运行方式跟travis大致相同
+* fork此项目
+* 访问[项目settings](settings)页面左侧Secrets项，添加secrets，Name填hostloc_username_1和hostloc_password_1，value填帐号和密码，有代理添加代理，Name填代理方式hostloc_http_1或hostloc_https_1，Value填上述提到的代理，多账号以此类推
+* 修改[hostloc.yml](/.github/workflows/hostloc.yml)
+   把上一步添加的secrets添加到env: 后，如
+   ```
+   env:
+        hostloc_username_1: ${{ secrets.hostloc_username_1 }}
+        hostloc_password_1: ${{ secrets.hostloc_password_1 }}
+   ```
+保存就ok了
 
 
 ## 部署到腾讯云无服务器云函数
