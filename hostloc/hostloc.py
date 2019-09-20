@@ -102,7 +102,7 @@ for key, value in envs.items():
             accounts[value] = _account
 
 
-L7FW = None
+L7DFW = None
 
 
 def hostloc_checkin(account, strage='local'):
@@ -111,9 +111,9 @@ def hostloc_checkin(account, strage='local'):
     proxies = account.get('proxies')
     s = requests.session()
     cookies = {}
-    global L7FW
-    if L7FW:
-        cookies['L7FW'] = L7FW
+    global L7DFW
+    if L7DFW:
+        cookies['L7DFW'] = L7DFW
     headers = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
     }
@@ -130,14 +130,14 @@ def hostloc_checkin(account, strage='local'):
         logger.info("发现防ddos")
         # aes_url = 'https://donjs.herokuapp.com/aes/{a}/{b}/{c}'.format(a=_aes[0], b=_aes[1], c=_aes[2])
         # logger.debug('aes_url: %s', aes_url)
-        # L7FW = requests.get(aes_url, proxies=proxies).text
-        L7FW = decodeAesCookie(
+        # L7DFW = requests.get(aes_url, proxies=proxies).text
+        L7DFW = decodeAesCookie(
             toNumbers(_aes[2]),
             toNumbers(_aes[0]),
             toNumbers(_aes[1])
         )
-        logger.debug('L7FW: %s', L7FW)
-        cookies['L7FW'] = L7FW
+        logger.debug('L7DFW: %s', L7DFW)
+        cookies['L7DFW'] = L7DFW
         time.sleep(1)
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
