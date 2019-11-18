@@ -107,7 +107,11 @@ Travis运行效果图：
         hostloc_username_1: ${{ secrets.hostloc_username_1 }}
         hostloc_password_1: ${{ secrets.hostloc_password_1 }}
    ```
-保存就ok了
+访问你fork后项目的Actions页面，第一次需要点击“I understand my workflows, go ahead and run them”
+![](/docs/img/hostloc_start_actions.jpg)
+由于actions目前有个问题是fork后不会自动开始actions，需要有一个项目更新以触发
+例如修改[hostloc.yml](/.github/workflows/hostloc.yml)文件名为hostloc1.yml，当然之后你也可以修改回来
+或者在/.github/workflows/文件夹下随意新建一个文件之后删除
 
 
 ## 部署到腾讯云无服务器云函数
