@@ -154,7 +154,7 @@ def hostloc_checkin(account, strage='local'):
 
     _visit = 0
     visited_space_uids = []
-    random_visits = 10 + randint(0, 5)
+    random_visits = 10 + randint(5, 10)
     while True:
         if _visit == random_visits:
             break
