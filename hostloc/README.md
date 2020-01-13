@@ -2,8 +2,6 @@
 
 ## Hostloc刷分脚本
 
-前贴：[https://www.hostloc.com/thread-505027-1-1.html](https://www.hostloc.com/thread-505027-1-1.html)
-
 源码地址：[https://github.com/fakedon/checkin](https://github.com/fakedon/checkin)
 
 最近loc开启防cc，原来的脚本基本都没设置时间间隔，很容易被判定cc而导致ip被封
