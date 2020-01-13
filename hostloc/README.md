@@ -96,7 +96,7 @@ Travis运行效果图：
 
 
 ## 部署到GithubActions
-[Github actions](https://github.com/features/actions)是github的新功能，需要排队申请，通过后即可使用，访问[此处](https://github.com/features/actions),申请开通
+[Github actions](https://github.com/features/actions)是github的新功能，~~需要排队申请，通过后即可使用，访问[此处](https://github.com/features/actions),申请开通~~, 目前都可免费使用  
 运行方式跟travis大致相同
 * fork此项目
 * 访问项目settings页面左侧Secrets项，添加secrets，Name填hostloc_username_1和hostloc_password_1，value填帐号和密码，有代理添加代理，Name填代理方式hostloc_http_1或hostloc_https_1，Value填上述提到的代理，多账号以此类推
@@ -109,8 +109,8 @@ Travis运行效果图：
    ```
 访问你fork后项目的Actions页面，第一次需要点击“I understand my workflows, go ahead and run them”
 ![](/docs/img/hostloc_start_actions.jpg)
-由于actions目前有个问题是fork后不会自动开始actions，需要有一个项目更新以触发
-例如修改[hostloc.yml](/.github/workflows/hostloc.yml)文件名为hostloc1.yml，当然之后你也可以修改回来
+由于actions目前有个问题是fork后不会自动开始actions，需要有一个项目更新以触发  
+例如修改[hostloc.yml](/.github/workflows/hostloc.yml)文件名为hostloc1.yml，当然之后你也可以修改回来  
 或者在/.github/workflows/文件夹下随意新建一个文件之后删除
 
 
