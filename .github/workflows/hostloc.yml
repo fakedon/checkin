@@ -26,5 +26,7 @@ jobs:
       env:
         hostloc_username_1: ${{ secrets.hostloc_username_1 }}
         hostloc_password_1: ${{ secrets.hostloc_password_1 }}
+        hostloc_username_2: ${{ secrets.hostloc_username_2 }}
+        hostloc_password_2: ${{ secrets.hostloc_password_2 }}
       run: |
         python run.py
