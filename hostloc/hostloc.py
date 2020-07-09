@@ -16,6 +16,9 @@ from random import randint
 import requests
 
 
+show_log = False
+secret_log = '***'
+
 HOSTLOC_DIR = os.path.dirname(os.path.abspath(__file__))
 log_path = os.path.join(HOSTLOC_DIR, 'hostloc.log')
 
@@ -136,7 +139,11 @@ def hostloc_checkin(account, strage='local'):
     if strage == 'tencent':
         pass
     else:
-        logger.info('使用IP: {}'.format(get_ip(proxies=proxies)))
+        if show_log:
+            logger.debug('使用IP: {}', get_ip(proxies=proxies))
+        else:
+            logger.debug('使用IP: {}', secret_log)
+
     login_url = 'https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
     login_post = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
@@ -180,9 +187,15 @@ def hostloc_checkin(account, strage='local'):
         visited_space_uids.append(space_uid)
         time.sleep(randint(1, 5))
         if '抱歉，您指定的用户空间不存在' in space_text:
-            logger.debug('访问UID: %s，不存在', space_uid)
+            if show_log:
+                logger.debug('访问UID: %s，不存在', space_uid)
+            else:
+                logger.debug('访问UID: %s, 不存在', secret_log)
             continue
-        logger.debug('访问UID: %s, 成功', space_uid)
+        if show_log:
+            logger.debug('访问UID: %s, 成功', space_uid)
+        else:
+            logger.debug()('访问UID: %s, 成功', secret_log)
         _visit += 1
     new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     _new = re.search(info_pattern, new_user_info)
@@ -221,7 +234,10 @@ def start(interval=None, log_to_file=True, strage='local'):
     if strage == 'tencent':
         pass
     else:
-        logger.debug('本机IP: %s', get_ip())
+        if show_log:
+            logger.debug('本机IP: %s', get_ip())
+        else:
+            logger.debug('本机IP: %s', secret_log)
     _first = True
     _wait_time = interval or 3 * 60
     for account in accounts.values():
