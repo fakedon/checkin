@@ -1,6 +1,6 @@
 name: Hostloc
 
-on: 
+on:
   push:
     branches:
     - master
@@ -24,7 +24,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run hostloc checkin
       env:
-        hostloc_username_1: ${{ secrets.hostloc_username_1 }}
-        hostloc_password_1: ${{ secrets.hostloc_password_1 }}
+        hostloc_username: ${{ secrets.hostloc_username }}
+        hostloc_password: ${{ secrets.hostloc_password }}
       run: |
         python run.py

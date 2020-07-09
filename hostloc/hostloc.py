@@ -100,6 +100,21 @@ for key, value in envs.items():
             if proxies:
                 _account['proxies'] = proxies
             accounts[value] = _account
+    if key == 'hostloc_username':
+        _sep = ','
+        _user_list = os.getenv(key).split(_sep)
+        _passwd_list = os.getenv('hostloc_password').split(_sep)
+        if len(_user_list) == 0 or len(_user_list) != len(_passwd_list):
+            print('用户名个数为0或者用户名与密码个数不相等，请检查hostloc_username和hostloc_password')
+            sys.exit(1)
+        else:
+            for i in range(len(_user_list)):
+                _account = {
+                    'username': _user_list[i],
+                    'password': _passwd_list[i]
+                }
+                accounts[_user_list[i]] = _account
+
 
 
 L7DFW = None

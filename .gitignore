@@ -22,3 +22,4 @@ utils
 plugins
 hostloc/local.cfg
 hostloc/requirements.txt
+.history
