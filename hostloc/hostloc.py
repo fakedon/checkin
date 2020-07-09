@@ -195,7 +195,7 @@ def hostloc_checkin(account, strage='local'):
         if show_log:
             logger.debug('访问UID: %s, 成功', space_uid)
         else:
-            logger.debug()('访问UID: %s, 成功', secret_log)
+            logger.debug('访问UID: %s, 成功', secret_log)
         _visit += 1
     new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     _new = re.search(info_pattern, new_user_info)
