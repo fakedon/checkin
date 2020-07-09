@@ -140,9 +140,9 @@ def hostloc_checkin(account, strage='local'):
         pass
     else:
         if show_log:
-            logger.debug('使用IP: {}', get_ip(proxies=proxies))
+            logger.debug('使用IP: %s', get_ip(proxies=proxies))
         else:
-            logger.debug('使用IP: {}', secret_log)
+            logger.debug('使用IP: %s', secret_log)
 
     login_url = 'https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
     login_post = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
