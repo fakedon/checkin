@@ -16,7 +16,6 @@ from random import randint
 import requests
 
 
-show_log = False
 secret_log = '***'
 
 HOSTLOC_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -123,7 +122,7 @@ for key, value in envs.items():
 L7DFW = None
 
 
-def hostloc_checkin(account, strage='local'):
+def hostloc_checkin(account, strage='local', show_secret=False):
     username = account.get('username')
     password = account.get('password')
     proxies = account.get('proxies')
@@ -139,7 +138,7 @@ def hostloc_checkin(account, strage='local'):
     if strage == 'tencent':
         pass
     else:
-        if show_log:
+        if show_secret:
             logger.debug('使用IP: %s', get_ip(proxies=proxies))
         else:
             logger.debug('使用IP: %s', secret_log)
@@ -187,12 +186,12 @@ def hostloc_checkin(account, strage='local'):
         visited_space_uids.append(space_uid)
         time.sleep(randint(1, 5))
         if '抱歉，您指定的用户空间不存在' in space_text:
-            if show_log:
+            if show_secret:
                 logger.debug('访问UID: %s，不存在', space_uid)
             else:
                 logger.debug('访问UID: %s, 不存在', secret_log)
             continue
-        if show_log:
+        if show_secret:
             logger.debug('访问UID: %s, 成功', space_uid)
         else:
             logger.debug('访问UID: %s, 成功', secret_log)
@@ -203,10 +202,10 @@ def hostloc_checkin(account, strage='local'):
     logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
 
 
-def hostloc_checkin_retry(account, retry=3, strage='local'):
+def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
     while True:
         try:
-            hostloc_checkin(account, strage='local')
+            hostloc_checkin(account, strage='local', show_secret=show_secret)
             break
         except Exception as e:
             logger.exception(e)
@@ -222,7 +221,7 @@ def hostloc_checkin_retry(account, retry=3, strage='local'):
                 time.sleep(20)
 
 
-def start(interval=None, log_to_file=True, strage='local'):
+def start(interval=None, log_to_file=True, strage='local', show_secret=False):
     strages = ['local', 'travis', 'tencent']
     if strage not in strages:
         strage = 'local'
@@ -234,7 +233,7 @@ def start(interval=None, log_to_file=True, strage='local'):
     if strage == 'tencent':
         pass
     else:
-        if show_log:
+        if show_secret:
             logger.debug('本机IP: %s', get_ip())
         else:
             logger.debug('本机IP: %s', secret_log)
@@ -245,7 +244,7 @@ def start(interval=None, log_to_file=True, strage='local'):
             logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
             time.sleep(int(_wait_time))
         _first = False
-        hostloc_checkin_retry(account, retry=3, strage=strage)
+        hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
     logger.info('========= 今日任务完成 ==========')
 
 
@@ -892,7 +891,7 @@ class LoginError(Exception):
     pass
 
 def main_handler(event, context):
-    return start(interval=60, log_to_file=False, strage='tencent')
+    return start(interval=60, log_to_file=False, strage='tencent', show_secret=True)
 
 
 if __name__ == '__main__':
