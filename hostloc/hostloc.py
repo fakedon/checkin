@@ -126,6 +126,12 @@ def hostloc_checkin(account, strage='local', show_secret=False):
     username = account.get('username')
     password = account.get('password')
     proxies = account.get('proxies')
+
+    if show_secret:
+        username_log = username
+    else:
+        username_log = secret_log
+
     s = requests.session()
     cookies = {}
     global L7DFW
@@ -167,7 +173,7 @@ def hostloc_checkin(account, strage='local', show_secret=False):
     info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
     _current = re.search(info_pattern, user_info)
     if _current:
-        logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+        logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
     else:
         raise LoginError("登陆出错")
 
@@ -198,8 +204,8 @@ def hostloc_checkin(account, strage='local', show_secret=False):
         _visit += 1
     new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     _new = re.search(info_pattern, new_user_info)
-    logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
-    logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
+    logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+    logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
 
 
 def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
@@ -238,7 +244,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False):
         else:
             logger.debug('本机IP: %s', secret_log)
     _first = True
-    _wait_time = interval or 3 * 60
+    _wait_time = interval or 5 * 60
     for account in accounts.values():
         if not _first:
             logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
