@@ -220,11 +220,13 @@ def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
                 break
             retry -= 1
             if strage == 'tencent':
-                logger.debug('等待10秒重试')
-                time.sleep(10)
+                n = 10
+                logger.debug('等待%s秒重试', n)
+                time.sleep(n)
             else:
-                logger.debug('等待20秒重试')
-                time.sleep(20)
+                n = 20
+                logger.debug('等待%s秒重试', n)
+                time.sleep(n)
 
 
 def start(interval=None, log_to_file=True, strage='local', show_secret=False):
