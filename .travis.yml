@@ -3,7 +3,7 @@ python:
   - "3.8"
 # command to install dependencies
 install:
-  - travis_wait pip install -r hostloc_requirements.txt
+  - travis_wait pip install -r hostloc/requirements.txt
 # command to run tests
 script:
   - cd hostloc
