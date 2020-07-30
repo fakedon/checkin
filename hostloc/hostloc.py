@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import binascii
 import configparser
+import datetime
 import logging
 import math
 import os
@@ -14,6 +14,7 @@ import time
 from random import randint
 
 import requests
+from croniter import croniter, croniter_range
 
 
 secret_log = '***'
@@ -42,7 +43,7 @@ def get_ip(url=None, proxies=None):
     return requests.get(url, proxies=proxies).text
 
 
-accounts = {}
+accounts = []
 config_file = args.config
 if config_file and os.path.isfile(config_file):
     config = configparser.ConfigParser()
@@ -71,7 +72,7 @@ if config_file and os.path.isfile(config_file):
             }
             if proxies:
                 _account['proxies'] = proxies
-            accounts[username] = _account
+            accounts.append(_account)
 
 
 envs = dict(os.environ)
@@ -101,7 +102,7 @@ for key, value in envs.items():
             }
             if proxies:
                 _account['proxies'] = proxies
-            accounts[value] = _account
+            accounts.append(_account)
     if key == 'hostloc_username':
         _sep = ','
         _user_list = os.getenv(key).split(_sep)
@@ -115,9 +116,9 @@ for key, value in envs.items():
                     'username': _user_list[i],
                     'password': _passwd_list[i]
                 }
-                accounts[_user_list[i]] = _account
+                accounts.append(_account)
 
-
+onebyone = envs.get('hostloc_onebyone', 'noset').lower()
 
 L7DFW = None
 
@@ -229,7 +230,7 @@ def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
                 time.sleep(n)
 
 
-def start(interval=None, log_to_file=True, strage='local', show_secret=False):
+def start(interval=None, log_to_file=True, strage='local', show_secret=False, onebyone=False):
     strages = ['local', 'travis', 'tencent']
     if strage not in strages:
         strage = 'local'
@@ -245,17 +246,49 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False):
             logger.debug('本机IP: %s', get_ip())
         else:
             logger.debug('本机IP: %s', secret_log)
-    _first = True
-    _wait_time = interval or 5 * 60
-    for account in accounts.values():
-        if not _first:
-            logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
-            time.sleep(int(_wait_time))
-        _first = False
-        hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
+    if onebyone == 'noset':
+        onebyone = False
+
+    if onebyone:
+        user_length = len(accounts)
+        num = -1
+        cron_match = None
+        with open('.github/workflows/main.yml', 'r') as f:
+            cron_match = re.search(r"- cron: '(.*)'", f.read())
+
+        if cron_match:
+            cronsetting = cron_match.group(1)
+            now = datetime.datetime.now()
+            start_dt = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+            end_dt = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+            _ldt = None
+            for dt in croniter_range(start_dt, end_dt, cronsetting):
+                if num > user_length - 1:
+                    break
+                if _ldt is not None and _ldt <= now < dt:
+                    hostloc_checkin_retry(accounts[num], retry=3, strage=strage, show_secret=show_secret)
+                    break
+                _ldt = dt
+                num += 1
+    else:
+        _first = True
+        _wait_time = interval or 5 * 60
+        for account in accounts:
+            if not _first:
+                logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
+                time.sleep(int(_wait_time))
+            _first = False
+            hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
     logger.info('========= 今日任务完成 ==========')
 
+class LoginError(Exception):
+    pass
 
+def main_handler(event, context):
+    return start(interval=60, log_to_file=False, strage='tencent', show_secret=True, onebyone=False)
+
+
+# AES
 def append_PKCS7_padding(s):
     """return s padded to a multiple of 16-bytes by PKCS7 padding"""
     numpads = 16 - (len(s)%16)
@@ -893,14 +926,6 @@ def toNumbers(secret):
             text.append(int(value, 16))
 
         return text
-
-
-class LoginError(Exception):
-    pass
-
-def main_handler(event, context):
-    return start(interval=60, log_to_file=False, strage='tencent', show_secret=True)
-
 
 if __name__ == '__main__':
     start()
