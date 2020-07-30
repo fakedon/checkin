@@ -27,5 +27,4 @@ hostloc/hostloc.php
 hostloc/hostloc_async.py
 hostloc/hostloc2.php
 hostloc/local.cfg
-hostloc/requirements.txt
 .history
