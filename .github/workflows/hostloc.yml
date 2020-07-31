@@ -3,13 +3,14 @@ name: Hostloc
 on:
   schedule:
     # 详细cron设置请访问https://crontab.guru
-    # 最好修改cron避免大家都在同一时间签到，给服务器造成压力导致签到失败，
+    # 最好修改cron避免大家都在同一时间签到，给服务器造成压力导致签到失败
     # 目前有两种签到模式：一次签到所有账号，每隔指定时间签到一个账号
     # 每天9点10分签到完所有账号，格式：'10 9 * * *'
     # 每天从1点36分，每隔2小时签到一个账号，直到12点36分，格式：'36 1-12/2 * * *'(引号不可省略)
     # 这里需要修改下方hostloc_onebyone的值为true，否则每次都会签到所有账号
-    - cron: '10 9 * * *'
-#     - cron: '36 1-12/2 * * *'
+    # 注意这里的时区是UTC，如果表示北京9点10分，UTC时间为1点10分，减8小时即可
+    - cron: '10 5 * * *'
+    # - cron: '36 1-16/2 * * *'
 
 jobs:
   build:
@@ -18,10 +19,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Python3.7
+    - name: Set up Python3.8
       uses: actions/setup-python@v1
       with:
-        python-version: '3.7'
+        python-version: '3.8'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
