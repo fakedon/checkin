@@ -118,7 +118,12 @@ for key, value in envs.items():
                 }
                 accounts.append(_account)
 
-onebyone = envs.get('hostloc_onebyone', 'noset').lower()
+onebyone = False
+hostloc_onebyone = envs.get('hostloc_onebyone', 'false').lower()
+if hostloc_onebyone == 'true':
+    onebyone = True
+else:
+    onebyone = False
 
 L7DFW = None
 
@@ -246,8 +251,6 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
             logger.debug('本机IP: %s', get_ip())
         else:
             logger.debug('本机IP: %s', secret_log)
-    if onebyone == 'noset':
-        onebyone = False
 
     if onebyone:
         user_length = len(accounts)
@@ -928,4 +931,4 @@ def toNumbers(secret):
         return text
 
 if __name__ == '__main__':
-    start()
+    start(log_to_file=False, show_secret=False, onebyone=onebyone)
