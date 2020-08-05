@@ -269,6 +269,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
                 if num > user_length - 1:
                     break
                 if _ldt is not None and _ldt <= now < dt:
+                    logger.debug('正在执行第%s个任务...', num + 1)
                     hostloc_checkin_retry(accounts[num], retry=3, strage=strage, show_secret=show_secret)
                     break
                 _ldt = dt
