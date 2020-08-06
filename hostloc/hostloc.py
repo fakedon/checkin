@@ -256,7 +256,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
         user_length = len(accounts)
         num = -1
         cron_match = None
-        with open('.github/workflows/main.yml', 'r') as f:
+        with open('.github/workflows/hostloc.yml', 'r') as f:
             cron_match = re.search(r"- cron: '(.*)'", f.read())
 
         if cron_match:
