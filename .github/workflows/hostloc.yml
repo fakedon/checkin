@@ -33,5 +33,4 @@ jobs:
         hostloc_password: ${{ secrets.hostloc_password }}
         hostloc_onebyone: false
       run: |
-        cd hostloc
-        python hostloc.py
+        python hostloc/hostloc.py
