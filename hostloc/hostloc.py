@@ -12,6 +12,7 @@ import sys
 import textwrap
 import time
 from random import randint
+from http.client import RemoteDisconnected
 
 import requests
 from croniter import croniter, croniter_range
@@ -196,7 +197,7 @@ def hostloc_checkin(account, strage='local', show_secret=False):
             continue
         space_text = s.get('https://www.hostloc.com/space-uid-%s.html' % space_uid, proxies=proxies, cookies=cookies).text
         visited_space_uids.append(space_uid)
-        time.sleep(randint(1, 5))
+        time.sleep(randint(5, 10))
         if '抱歉，您指定的用户空间不存在' in space_text:
             if show_secret:
                 logger.debug('访问UID: %s，不存在', space_uid)
@@ -218,6 +219,9 @@ def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
     while True:
         try:
             hostloc_checkin(account, strage='local', show_secret=show_secret)
+            break
+        except RemoteDisconnected:
+            logger.debug('拒绝连接')
             break
         except Exception as e:
             logger.exception(e)
@@ -252,6 +256,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
         else:
             logger.debug('本机IP: %s', secret_log)
 
+    logger.debug('onebyone:', onebyone)
     if onebyone:
         user_length = len(accounts)
         cron_match = None
@@ -283,6 +288,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
                             time.sleep(int(_wait_time))
                         _first = False
                         hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
+                    logger.info('========= 今日任务完成 ==========')
     else:
         _first = True
         _wait_time = interval or 5 * 60
