@@ -254,7 +254,6 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
 
     if onebyone:
         user_length = len(accounts)
-        num = -1
         cron_match = None
         with open('.github/workflows/hostloc.yml', 'r') as f:
             cron_match = re.search(r"- cron: '(.*)'", f.read())
@@ -264,16 +263,26 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
             now = datetime.datetime.now()
             start_dt = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
             end_dt = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
-            _ldt = None
-            for dt in croniter_range(start_dt, end_dt, cronsetting):
-                if num > user_length - 1:
+            cronlist = list(croniter_range(start_dt, end_dt, cronsetting))
+
+            for i in enumerate(cronlist):
+                num, dt = i
+                if num == user_length:
                     break
-                if _ldt is not None and _ldt <= now < dt:
-                    logger.debug('正在执行第%s个任务...', num + 1)
-                    hostloc_checkin_retry(accounts[num], retry=3, strage=strage, show_secret=show_secret)
+                elif now < dt:
+                    logger.debug('正在执行第%s个任务...', num)
+                    hostloc_checkin_retry(accounts[num - 1], retry=3, strage=strage, show_secret=show_secret)
+                    logger.debug('第%s个任务完成...', num)
                     break
-                _ldt = dt
-                num += 1
+                elif dt == cronlist[-1]:
+                    _first = True
+                    _wait_time = interval or 5 * 60
+                    for account in accounts[num:]:
+                        if not _first:
+                            logger.debug('等待%s分钟处理下一个任务', _wait_time // 60)
+                            time.sleep(int(_wait_time))
+                        _first = False
+                        hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
     else:
         _first = True
         _wait_time = interval or 5 * 60
@@ -283,7 +292,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
                 time.sleep(int(_wait_time))
             _first = False
             hostloc_checkin_retry(account, retry=3, strage=strage, show_secret=show_secret)
-    logger.info('========= 今日任务完成 ==========')
+        logger.info('========= 今日任务完成 ==========')
 
 class LoginError(Exception):
     pass
