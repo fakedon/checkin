@@ -256,7 +256,7 @@ def start(interval=None, log_to_file=True, strage='local', show_secret=False, on
         else:
             logger.debug('本机IP: %s', secret_log)
 
-    logger.debug('onebyone:', onebyone)
+    logger.debug('onebyone: %s', onebyone)
     if onebyone:
         user_length = len(accounts)
         cron_match = None
