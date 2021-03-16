@@ -1,6 +1,7 @@
 name: Hostloc
 
 on:
+  workflow_dispatch:
   schedule:
     # 详细cron设置请访问https://crontab.guru
     # 最好修改cron避免大家都在同一时间签到，给服务器造成压力导致签到失败
