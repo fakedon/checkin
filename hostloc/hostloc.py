@@ -223,7 +223,7 @@ def hostloc_checkin(account, strage='local', show_secret=False):
 
 def hostloc_get_info(session, proxies=None, cookies=None):
     user_info = {}
-    r = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
+    r = session.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
     _ = re.search(r'>用户组: (\w+)</a>', r)
     if _:
         user_info['group'] = _.group(1)
