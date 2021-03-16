@@ -176,13 +176,19 @@ def hostloc_checkin(account, strage='local', show_secret=False):
         login_post_with_cookies = s.post(login_url, {'username': username, 'password': password}, proxies=proxies, cookies=cookies)
 
     time.sleep(randint(1, 5))
-    user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
-    info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
-    _current = re.search(info_pattern, user_info)
-    if _current:
-        logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+    user_info = hostloc_get_info(s, proxies, cookies)
+    if user_info:
+        logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, user_info.get('group'), user_info.get('coin'), user_info.get('rep'), user_info.get('point'))
     else:
-        raise LoginError("登陆出错")
+        logger.info("未正确获取用户信息, 可能登陆出错")
+        return
+#     user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
+#     info_pattern = re.compile(r'>用户组: (\w+)</a>.*<em> 金钱: </em>(\d+)  &nbsp; </li>.*<li><em> 威望: </em>(\d+) </li>.*<li class=\"cl\"><em>积分: </em>(\d+) <span', flags=re.S)
+#     _current = re.search(info_pattern, user_info)
+#     if _current:
+#         logger.info("用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+#     else:
+#         raise LoginError("登陆出错")
 
     time.sleep(randint(1, 5))
 
@@ -209,11 +215,29 @@ def hostloc_checkin(account, strage='local', show_secret=False):
         else:
             logger.debug('访问UID: %s, 成功', secret_log)
         _visit += 1
-    new_user_info = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
-    _new = re.search(info_pattern, new_user_info)
-    logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
-    logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
+    new_user_info = hostloc_get_info(s, proxies, cookies)
+    logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, user_info.get('group'), user_info.get('coin'), user_info.get('rep'), user_info.get('point'))
+    logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, new_user_info.get('group'), new_user_info.get('coin'), new_user_info.get('rep'), new_user_info.get('point'))
+#     logger.info("(之前)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _current.group(1), _current.group(2), _current.group(3), _current.group(4))
+#     logger.info("(现在)用户: %s, 用户组: %s, 金钱: %s, 威望: %s, 积分: %s", username_log, _new.group(1), _new.group(2), _new.group(3), _new.group(4))
 
+def hostloc_get_info(session, proxies=None, cookies=None):
+    user_info = {}
+    r = s.get('https://www.hostloc.com/home.php?mod=spacecp&ac=credit', proxies=proxies, cookies=cookies).text
+    _ = re.search(r'>用户组: (\w+)</a>', r)
+    if _:
+        user_info['group'] = _.group(1)
+    _ = re.search(r'<em> 金钱: </em>(\d+)', r)
+    if _:
+        user_info['coin'] = _.group(1)
+    _ = re.search(r'<em> 威望: </em>(\d+)', r)
+    if _:
+        user_info['rep'] = _.group(1)
+    _ = re.search(r'<em>积分: </em>(\d+)', r)
+    if _:
+        user_info['point'] = _.group(1)
+    return user_info
+    
 
 def hostloc_checkin_retry(account, retry=3, strage='local', show_secret=False):
     while True:
